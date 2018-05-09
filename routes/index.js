@@ -8,6 +8,7 @@ router.get('/render/:slug', function(req, res, next) {
       headless: true
     });
     const page = await browser.newPage();
+    await page.setRequestInterception(true).catch(function(err) {browser.close(); res.send("500");});
     page.on('request', req => {
       let headers = req.headers;
       headers['referer'] = 'https://www.facebook.com/';
@@ -18,9 +19,9 @@ router.get('/render/:slug', function(req, res, next) {
     await page.setExtraHTTPHeaders({
       'referer': 'https://www.facebook.com/'
     });
-    await page.goto(req.params.slug)
-    let content = await page.content();
-    await browser.close();
+    await page.goto(req.params.slug, {"waitUntil" : "networkidle2", "timeout" : 2600}).catch(function(err) {})
+    let content = await page.content().catch(function(err) {browser.close(); res.send("500");});
+    await browser.close().catch(function(err) {browser.close(); res.send("500");});
     await res.send(content);
   })();
 });
