@@ -5,7 +5,8 @@ const puppeteer = require('puppeteer');
 router.get('/render/:slug', function(req, res, next) {
   (async () => {
     const browser = await puppeteer.launch({
-      headless: true
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
     await page.setRequestInterception(true).catch(function(err) {browser.close(); res.send("500");});
