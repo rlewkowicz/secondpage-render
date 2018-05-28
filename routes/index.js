@@ -21,9 +21,11 @@ router.get('/render/:slug', function(req, res, next) {
       'referer': 'https://www.facebook.com/'
     });
     await page.goto(req.params.slug, {"waitUntil" : "networkidle2", "timeout" : 2600}).catch(function(err) {})
-    let content = await page.content().catch(function(err) {browser.close(); res.send("500");});
+    var result={};
+    result['tree'] = await page._client.send('Page.getResourceTree');
+    result['html'] = await page.content().catch(function(err) {browser.close(); res.send("500");});
     await browser.close().catch(function(err) {browser.close(); res.send("500");});
-    await res.send(content);
+    await res.send(result);
   })();
 });
 
