@@ -20,7 +20,7 @@ router.get('/render/:slug', function(req, res, next) {
     await page.setExtraHTTPHeaders({
       'referer': 'https://www.facebook.com/'
     });
-    await page.goto(req.params.slug, {"waitUntil" : "networkidle2", "timeout" : 5000}).catch(function(err) {})
+    await page.goto(req.params.slug, {"waitUntil" : "networkidle2", "timeout" : 10000}).catch(function(err) {})
     var result={};
     result['tree'] = await page._client.send('Page.getResourceTree');
     result['html'] = await page.content().catch(function(err) {browser.close(); res.send("500");});
